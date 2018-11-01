@@ -198,6 +198,7 @@ class HomePage extends Component {
           <div className="col-lg-3" />
           <div className="col-lg-1">
             <SuperScriptFont
+              key="resultFirst"
               text={this.state.resultFirst}
               superScript="MI"
               style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
@@ -209,6 +210,7 @@ class HomePage extends Component {
           </div>
           <div className="col-lg-1">
             <SuperScriptFont
+              key="resultSecond"
               text={this.state.resultSecond}
               superScript="MI"
               style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
@@ -220,6 +222,7 @@ class HomePage extends Component {
           </div>
           <div className="col-lg-1">
             <SuperScriptFont
+              key="resultThird"
               text={this.state.resultThird}
               superScript="MI"
               style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
@@ -231,6 +234,7 @@ class HomePage extends Component {
           </div>
           <div className="col-lg-1">
             <SuperScriptFont
+              key="resultForth"
               text={this.state.resultForth}
               superScript="MI"
               style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
@@ -242,6 +246,7 @@ class HomePage extends Component {
           </div>
           <div className="col-lg-1">
             <SuperScriptFont
+              key="resultFifth"
               text={this.state.resultFifth}
               superScript="MI"
               style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
@@ -253,6 +258,7 @@ class HomePage extends Component {
           </div>
           <div className="col-lg-1">
             <SuperScriptFont
+              key="resultSixth"
               text={this.state.resultSixth}
               superScript="MI"
               style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
@@ -272,6 +278,7 @@ class HomePage extends Component {
           <div className="col-lg-1" />
           <div className="col-lg-2">
             <NumberSelector
+              key="speed"
               title="Speed"
               superScript="MPH"
               value={this.state.speed}
@@ -282,6 +289,7 @@ class HomePage extends Component {
 
           <div className="col-lg-2" id="needLineBreak">
             <NumberSelector
+              key="temporature"
               title="Outside Temperature"
               superScript="o"
               value={this.state.temperature}
