@@ -84,7 +84,7 @@ class HomePage extends Component {
   async getResult() {
     let BaseURL =
       "http://bct-recruitment.s3-website-ap-southeast-2.amazonaws.com/battery-data.json";
-    //get the summary information of specific trip
+
     await axios.get(BaseURL).then(response => {
       console.log(response.data);
       //console.log(response.data);
