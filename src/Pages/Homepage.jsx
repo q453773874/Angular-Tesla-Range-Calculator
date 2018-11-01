@@ -89,12 +89,12 @@ class HomePage extends Component {
       console.log(response.data);
       //console.log(response.data);
       this.setState({
-        resultFirst: response.data.tripInfo,
-        resultSecond: response.data.memberInfo,
-        resultThird: response.data.accommodationInfo,
-        resultForth: response.data.rentalInfo,
-        resultFifth: !response.data.liftPassInfo.isRemoved,
-        resultSixth: response.data.liftPassInfo.comment
+        resultFirst: response.data.resultFirst,
+        resultSecond: response.data.resultSecond,
+        resultThird: response.data.resultThird,
+        resultForth: response.data.resultForth,
+        resultFifth: !response.data.resultFifth,
+        resultSixth: response.data.resultSixth
       });
     });
   }
