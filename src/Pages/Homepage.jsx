@@ -27,15 +27,17 @@ const RedFont = styled.span`
 class HomePage extends Component {
   state = {
     acState: "off",
-    speed: 20,
-    temperature: 10,
+    speed: 45,
+    temperature: -10,
     wheels: "19",
-    resultFirst: 246,
-    resultSecond: 250,
-    resultThird: 297,
-    resultForth: 306,
-    resultFifth: 336,
-    resultSixth: 376
+    results: [
+      { name: "60", value: 246 },
+      { name: "60D", value: 250 },
+      { name: "75", value: 297 },
+      { name: "75D", value: 306 },
+      { name: "90D", value: 336 },
+      { name: "P100D", value: 376 }
+    ]
   };
 
   //   ac button
@@ -70,34 +72,81 @@ class HomePage extends Component {
   onHandClickDown = name => {
     if (name === "speed") {
       this.setState({
-        speed: this.state.speed === 0 ? 0 : (this.state.speed -= 5)
+        speed: this.state.speed === 45 ? 45 : (this.state.speed -= 5)
       });
     }
     if (name === "temperature") {
       this.setState({
         temperature:
-          this.state.temperature === 0 ? 0 : (this.state.temperature -= 5)
+          this.state.temperature === -10 ? -10 : (this.state.temperature -= 5)
       });
     }
   };
+
+  binarySearchSpeed = (targetSpeed, targetTem, arr, start, end) => {
+    var start = start || 0;
+    var end = end || arr.length - 1;
+    var mid = parseInt(start + (end - start) / 2);
+    // if can find speed
+    if (targetSpeed == arr[mid]) {
+      for (var tem in arr[mid]) {
+        if (tem === targetTem) {
+          return arr[mid][tem];
+        }
+      }
+    } else if (targetSpeed > arr[mid]) {
+      return this.binarySearchSpeed(targetSpeed, arr, mid + 1, end);
+    } else {
+      return this.binarySearchSpeed(targetSpeed, arr, start, mid - 1);
+    }
+    return -1;
+  };
+
   // get json result
   async getResult() {
     let BaseURL =
       "http://bct-recruitment.s3-website-ap-southeast-2.amazonaws.com/battery-data.json";
 
     await axios.get(BaseURL).then(response => {
-      console.log(response.data);
-      //console.log(response.data);
-      this.setState({
-        resultFirst: response.data.resultFirst,
-        resultSecond: response.data.resultSecond,
-        resultThird: response.data.resultThird,
-        resultForth: response.data.resultForth,
-        resultFifth: !response.data.resultFifth,
-        resultSixth: response.data.resultSixth
-      });
+      var data = response.data;
+      console.log(data);
+
+      var resultSet = this.state.results;
+      // search json contain selected speed
+      for (var name in resultSet) {
+        for (var type in data) {
+          // find type
+          if (type === name) {
+            // search wheel size
+            for (var wheelSearch in data[type]) {
+              if (wheelSearch === this.state.wheels) {
+                // search acstate
+                for (var acSearch in wheelSearch[wheelSearch]) {
+                  if (acSearch === this.state.acState) {
+                    if (
+                      this.binarySearch(
+                        this.state.speed,
+                        wheelSearch[wheelSearch]["speed"]
+                      ) !== -1
+                    ) {
+                      //creates the clone of the state
+                      let clone = resultSet.slice();
+                      clone[name] = this.binarySearch(
+                        this.state.speed,
+                        wheelSearch[wheelSearch]["speed"]
+                      );
+                      this.setState({ results: clone });
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     });
   }
+
   componentDidMount() {
     var angle = 0;
     setInterval(function() {
@@ -196,78 +245,21 @@ class HomePage extends Component {
         {/* value */}
         <div className="row" style={{ whiteSpace: "nowrap" }}>
           <div className="col-lg-3" />
-          <div className="col-lg-1">
-            <SuperScriptFont
-              key="resultFirst"
-              text={this.state.resultFirst}
-              superScript="MI"
-              style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
-              superStyle={{
-                color: "rgb(89, 152, 255)",
-                fontSize: "20px !important"
-              }}
-            />
-          </div>
-          <div className="col-lg-1">
-            <SuperScriptFont
-              key="resultSecond"
-              text={this.state.resultSecond}
-              superScript="MI"
-              style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
-              superStyle={{
-                color: "rgb(89, 152, 255)",
-                fontSize: "20px !important"
-              }}
-            />
-          </div>
-          <div className="col-lg-1">
-            <SuperScriptFont
-              key="resultThird"
-              text={this.state.resultThird}
-              superScript="MI"
-              style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
-              superStyle={{
-                color: "rgb(89, 152, 255)",
-                fontSize: "20px !important"
-              }}
-            />
-          </div>
-          <div className="col-lg-1">
-            <SuperScriptFont
-              key="resultForth"
-              text={this.state.resultForth}
-              superScript="MI"
-              style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
-              superStyle={{
-                color: "rgb(89, 152, 255)",
-                fontSize: "20px !important"
-              }}
-            />
-          </div>
-          <div className="col-lg-1">
-            <SuperScriptFont
-              key="resultFifth"
-              text={this.state.resultFifth}
-              superScript="MI"
-              style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
-              superStyle={{
-                color: "rgb(89, 152, 255)",
-                fontSize: "20px !important"
-              }}
-            />
-          </div>
-          <div className="col-lg-1">
-            <SuperScriptFont
-              key="resultSixth"
-              text={this.state.resultSixth}
-              superScript="MI"
-              style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
-              superStyle={{
-                color: "rgb(89, 152, 255)",
-                fontSize: "20px !important"
-              }}
-            />
-          </div>
+          {this.state.results.map(eachResult => (
+            <div className="col-lg-1">
+              <SuperScriptFont
+                key={eachResult.name}
+                text={eachResult.value}
+                superScript="MI"
+                style={{ color: "rgb(89, 152, 255)", fontSize: "45px" }}
+                superStyle={{
+                  color: "rgb(89, 152, 255)",
+                  fontSize: "20px !important"
+                }}
+              />
+            </div>
+          ))}
+
           <div className="col-lg-3" />
         </div>
 
